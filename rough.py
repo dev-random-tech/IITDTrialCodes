@@ -7,9 +7,10 @@ from operator import and_
 # input_dataframe = input_table.as_pandas()
 
 # Fault of the machine at which component or why || 
-#Right Values
-def xnor_(a,b):
-    
+def xnor_(a,b): #Returns True only if both values are same
+   c = (a and b) or ((not a) and (not b))
+   return c
+
 def faults(tags):
     smps1 = True
     smps2 = True
@@ -124,7 +125,7 @@ def faults(tags):
     manual,\
     executeOrder]
 
-    new_list = list(map(and_,tags,tagsCompare))
+    new_list = list(map(xnor_,tags,tagsCompare))
     if (any(new_list)):
         (smps1,\
         smps2,\
@@ -250,6 +251,9 @@ def faults(tags):
         'Intermediate Sensor: Device Warning'])
 
         print('Faults at: ',faults[fault_reasons])
+
+    else:
+        return
 
 
 '''
