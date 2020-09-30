@@ -7,7 +7,7 @@ from operator import and_
 # input_dataframe = input_table.as_pandas()
 
 # Fault of the machine at which component or why || 
-def xnor_(a,b): #Returns True only if both values are same
+def xor_(a,b): #Returns True only if both values are same
    c = (a and b) or ((not a) and (not b))
    return c
 
@@ -125,8 +125,8 @@ def faults(tags):
     manual,\
     executeOrder]
 
-    new_list = list(map(xnor_,tags,tagsCompare))
-    if (not (any(new_list))):
+    new_list = list(map(xor_,tags,tagsCompare))
+    if (any(new_list)):
         (smps1,\
         smps2,\
         smps3,\
