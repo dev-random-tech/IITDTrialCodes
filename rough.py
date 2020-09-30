@@ -126,7 +126,7 @@ def faults(tags):
     executeOrder]
 
     new_list = list(map(xnor_,tags,tagsCompare))
-    if (any(new_list)):
+    if (not (any(new_list))):
         (smps1,\
         smps2,\
         smps3,\
