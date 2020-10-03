@@ -12,7 +12,6 @@ def entrySensorError():
 
     Ent_diag1_IO2 = randint(0,1)
     s.ent_diag1_IO2.set_value(Ent_diag1_IO2)
-    print(Ent_diag1_IO2)
 
     Ent_diag1_IO3 = randint(0,1)
     s.ent_diag1_IO3.set_value(Ent_diag1_IO3)
@@ -115,6 +114,8 @@ def operation():
     print('Valve body placed in the pallet \n')
     time.sleep(1)
 
+    #entrySensorError()
+    intermediateSensorError() 
     # Once clamping is done, gripper moves where the visions will be focused towards the valve body.
     # Gripper is adjusted to align the vision sensor to the valve body
     vision_Sensor = 1
@@ -267,14 +268,15 @@ def main():
             print ('Entry Sensor: Pallet Placed \n')
             break  
     # Order is placed through app
+    
     print('Waiting for order \n')
     while True:
         order_Status = s.Order_Status.get_value()
         if (order_Status == True):
             break
     print('Order Status: Order Received \n')
-    entrySensorError()
-    intermediateSensorError()
+    #entrySensorError()
+    #intermediateSensorError()
     # Stopper will be in the up position
     stopper = 1
     s.Stopper.set_value(stopper)

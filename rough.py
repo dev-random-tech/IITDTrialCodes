@@ -9,9 +9,10 @@ from operator import and_
 # Fault of the machine at which component or why || 
 def xor_(a,b): #Returns True only if both values are same
    c = (a and b) or ((not a) and (not b))
-   return c
+   return (not c)
 
 def faults(tags):
+    #Right Values
     smps1 = True
     smps2 = True
     smps3 = True
@@ -38,7 +39,7 @@ def faults(tags):
     ent_diag1_IO4 = False
     ent_diag1_IO5 = False
     ent_diag1_IO6 = False
-    ent_diag1_IO1 = False
+    ent_diag2_IO1 = False
     ent_diag2_IO2 = False
     ent_diag2_IO3 = False
     ent_PowerSupply = True
@@ -66,7 +67,7 @@ def faults(tags):
     greenLight = False
     buzzer = False
     auto = True
-    manual = True
+    manual = False
     executeOrder = True
 
     tagsCompare = [smps1,\
@@ -94,7 +95,7 @@ def faults(tags):
     ent_diag1_IO4,\
     ent_diag1_IO5,\
     ent_diag1_IO6,\
-    ent_diag1_IO1,\
+    ent_diag2_IO1,\
     ent_diag2_IO2,\
     ent_diag2_IO3,\
     ent_PowerSupply,\
@@ -126,6 +127,7 @@ def faults(tags):
     executeOrder]
 
     new_list = list(map(xor_,tags,tagsCompare))
+    
     if (any(new_list)):
         (smps1,\
         smps2,\
@@ -184,13 +186,13 @@ def faults(tags):
         executeOrder) = tags
 
         powerSystem = smps1 and smps2 and smps3
-
+        #print(int_diag1_IO1,int_diag1_IO2,int_diag1_IO3,int_diag1_IO4)
         fault_reasons = [not smps1,\
         not smps2,\
         not smps3,\
         not plc_power,\
-        not vfd_Power and (not vfd_ConnectionStatus),\
-        not vfd_Power and (not vfd_SafetyFault),\
+        vfd_Power and (not vfd_ConnectionStatus),\
+        vfd_Power and (not vfd_SafetyFault),\
         not vfd_Power,\
         powerSystem and (not ent_DataModeIO),\
         powerSystem and ent_diag1_IO1,\
@@ -199,6 +201,8 @@ def faults(tags):
         powerSystem and ent_diag1_IO4,\
         powerSystem and ent_diag1_IO5,\
         powerSystem and ent_diag1_IO6,\
+        powerSystem and ent_diag2_IO1,\
+        powerSystem and ent_diag2_IO2,\
         powerSystem and (not ent_PowerSupply),\
         powerSystem and ent_IO_DeviceError,\
         powerSystem and ent_IO_DeviceWarning,\
@@ -208,7 +212,9 @@ def faults(tags):
         powerSystem and int_diag1_IO3,\
         powerSystem and int_diag1_IO4,\
         powerSystem and int_diag1_IO5,\
-        powerSystem and int_diag1_IO5,\
+        powerSystem and int_diag1_IO6,\
+        powerSystem and int_diag2_IO1,\
+        powerSystem and int_diag2_IO2,\
         powerSystem and (not int_PowerSupply),\
         powerSystem and int_IO_DeviceError,\
         powerSystem and int_IO_DeviceWarning]
@@ -226,12 +232,12 @@ def faults(tags):
 
         'Entry Sensor: not in IO Link Connection Mode',\
         'Entry Sensor: Low Voltage at Sensor Power Supply',\
-        'Entry Sensor: Low Voltage at AUX Power Supply'\
+        'Entry Sensor: Low Voltage at AUX Power Supply',\
         'Entry Sensor: Short Circuit',\
         'Entry Sensor: Short Circuit at Actuator Channel A',\
         'Entry Sensor: Short Circuit at Actuator Channel B',\
         'Entry Sensor: IO Link not verified',\
-        'Entry Sensor: Connected to wrong device or No device found connected to IO Link'\
+        'Entry Sensor: Connected to wrong device or No device found connected to IO Link',\
         'Entry Sensor: IO Link Device Warning',\
         'Entry Sensor: Power Supply Issues',\
         'Entry Sensor: Device Error',\
@@ -239,12 +245,12 @@ def faults(tags):
 
         'Intermediate Sensor: not in IO Link Connection Mode',\
         'Intermediate Sensor: Low Voltage at Sensor Power Supply',\
-        'Intermediate Sensor: Low Voltage at AUX Power Supply'\
+        'Intermediate Sensor: Low Voltage at AUX Power Supply',\
         'Intermediate Sensor: Short Circuit',\
         'Intermediate Sensor: Short Circuit at Actuator Channel A',\
         'Intermediate Sensor: Short Circuit at Actuator Channel B',\
         'Intermediate Sensor: IO Link not verified',\
-        'Intermediate Sensor: Connected to wrong device or No device found connected to IO Link'\
+        'Intermediate Sensor: Connected to wrong device or No device found connected to IO Link',\
         'Intermediate Sensor: IO Link Device Warning',\
         'Intermediate Sensor: Power Supply Issues',\
         'Intermediate Sensor: Device Error',\
