@@ -1,3 +1,5 @@
+### About the Project
+
 x is the image/gauge number
 * gauge-x-calibration.jpg is the image overlayed with detected circle boundary and angles marked in it
 * gauge-x-lines.jpg is the image overlayed with detected line segment of the needle
