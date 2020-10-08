@@ -98,7 +98,6 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
     maxLineGap = 0
     lines = cv2.HoughLinesP(image=dst2, rho=3, theta=np.pi / 180, threshold=100,minLineLength=minLineLength, maxLineGap=0)  # rho is set to 3 to detect more lines, easier to get more then filter them out later
 
-
     # remove all lines outside a given radius
     final_line_list = []
     #print "radius: %s" %r
@@ -111,6 +110,7 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
         for x1, y1, x2, y2 in lines[i]:
             diff1 = dist_2_pts(x, y, x1, y1)  # x, y is center of circle
             diff2 = dist_2_pts(x, y, x2, y2)  # x, y is center of circle
+            
             #set diff1 to be the smaller (closest to the center) of the two), makes the math easier
             if (diff1 > diff2):
                 temp = diff1
@@ -185,7 +185,7 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
     return new_value
 
 def main():
-    gauge_number = 2
+    gauge_number = 5
     file_type='jpg'
     min_angle, max_angle, min_value, max_value, units, x, y, r = calibrate_gauge(gauge_number, file_type)
 
