@@ -96,7 +96,7 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
 
     minLineLength = 10
     maxLineGap = 0
-    lines = cv2.HoughLinesP(image=dst2, rho=3, theta=np.pi / 180, threshold=100,minLineLength=minLineLength, maxLineGap=0)  # rho is set to 3 to detect more lines, easier to get more then filter them out later
+    lines = cv2.HoughLinesP(image=dst2, rho=3, theta=np.pi / 180, threshold=100,minLineLength=minLineLength, maxLineGap=maxLineGap)  # rho is set to 3 to detect more lines, easier to get more then filter them out later
 
     # remove all lines outside a given radius
     final_line_list = []
