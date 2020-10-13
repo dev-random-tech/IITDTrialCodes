@@ -36,6 +36,10 @@ def setTrigger():
     data = {'trigger':'True'}
     db.child("GaugeReading").update(data)
 
+def setValue(val):
+    data = {'reading':val}
+    db.child("GaugeReading").update(data)
+
 def imgDownload(path):
     path_on_cloud = str(db.child("GaugeReading").get().val()['imageName'])
     storage.child(path_on_cloud).download(path)
@@ -48,7 +52,8 @@ def main():
         imgDownload(download_path)
         gauge_index = gauge_number()
         val,units = reader.cv(gauge_index,download_path,calibration_path)
-        print('Reading of the gauge: ',val,' ',units)
+        #print('Reading of the gauge: ',val,' ',units)
+        setValue(val)
         setTrigger() 
     
 
