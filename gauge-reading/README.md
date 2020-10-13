@@ -11,3 +11,12 @@ Ideal image size (in pixels) for this to work perfectly: (267,269,3)
 Current reading output is shown in the terminal
 
 _gauge-3 and gauge-4 images are not calibrated correctly thus not giving right results_
+
+gauge-reader-online.py is the starting program: It connects to the Firebase database and downloads
+the image,takes the gauge number and call all other relevant functions
+
+analog_gauge_reader.py is the program containing the computer vision based analog gauge detection
+and pulls in calibration data from gauge-details.csv through gauge_calibration.py
+
+imageMod.py is an extra program provided in case we may need to do modifications the image for better
+detection by analog_gauge_reader.py

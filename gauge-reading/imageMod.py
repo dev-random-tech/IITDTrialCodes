@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-window_name = "Checking Box"
 
 def boxDrawing(img,start_point,end_point):
 	color = (0,0,255) # BGR
@@ -21,32 +20,3 @@ def cropping(img,topLeft_x,topLeft_y,width,height):
 	
 	return crop_img
 	
-def main():
-	img = cv2.imread("./images/IMAGE5.png",1)
-	height,width,channels = img.shape
-	dimensions = (height,width,channels)
-
-	#Box Drawing for visual inspection
-	start_point = (75,75) #Top Left Corner
-	end_point = (75+269,75+267) #Bottom Right Corner
-	#new_img = boxDrawing(img,start_point,end_point)
-
-	#Cropping Image
-	new_img = cropping(img,100,340,width-190,int(height/2)-200)
-		
-	#Resizing Image
-	new_width = 269
-	new_height = 267
-	new_img2 = resizing(new_img,new_width,new_height)
-
-	#Displaying Image
-	cv2.imshow(window_name,new_img)
-	cv2.waitKey(0)
-
-	#Writing the new image
-	cv2.imwrite("./images/gauge-5.jpg",new_img)
-	
-
-if __name__=='__main__':
-    main()
-

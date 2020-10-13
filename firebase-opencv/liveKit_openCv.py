@@ -77,19 +77,19 @@ def cv():
     print('opencv result is -', a)           
     if a == 1:
         print("No error")
-        e = {"checked": "True", "error": "1"} 
+        e = {"trigger": "True", "reading": "1"} 
     else:
         print('Error')
         e = {"checked": "True", "error": "2"}
-    db.child("FSMKit1").child("errorDetection").update(e)
+    db.child("GaugeReading").update(e)
 
 def cvTrigger():
-    a = db.child("FSMKit1").child("errorDetection").get().val()['checked']
+    a = db.child("GaugeReading").get().val()['trigger']
     return str(a)
 
 def imgDownload():
     
-    path_on_cloud = str(db.child("FSMKit1").child("errorDetection").get().val()['imageName'])
+    path_on_cloud = str(db.child("GaugeReading").get().val()['imageName'])
     storage.child(path_on_cloud).download('downloaded.png')
 
 def check():
