@@ -169,8 +169,8 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
 
     return new_value
 
-def cv(gauge_number,img_path,calibration_path):
-    file_type = 'png'
+def cv(gauge_number,img_path,calibration_path,file_type):
+    
     img = cv2.imread(img_path,1)
     print('gauge number: 00%s' %gauge_number)
     min_angle, max_angle, min_value, max_value, units = gc.gauge_calibration(calibration_path,gauge_number) 

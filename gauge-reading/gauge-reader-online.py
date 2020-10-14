@@ -47,14 +47,15 @@ def imgDownload(path):
 def main():
     fireinit()
     calibration_path = '/media/dev/Data1/transfer/IITDFSM/IITDTrialCodes/gauge-reading/gauge-details.csv'
-    download_path = '/media/dev/Data1/transfer/IITDFSM/IITDTrialCodes/gauge-reading/images/downloaded.png'
+    download_path = '/media/dev/Data1/transfer/IITDFSM/IITDTrialCodes/gauge-reading/images/gauge-1.jpg'
+    fileType = download_path[-3:]
     if cvTrigger() == "True":
         imgDownload(download_path)
         gauge_index = gauge_number()
-        val,units = reader.cv(gauge_index,download_path,calibration_path)
+        val,units = reader.cv(gauge_index,download_path,calibration_path,fileType)
         print('Reading of the gauge: ',val,' ',units)
         setValue(val)
-        setTrigger() 
+        setTrigger()
     
 
 if __name__=='__main__':
