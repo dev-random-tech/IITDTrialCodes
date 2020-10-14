@@ -31,7 +31,7 @@ def calibrate_gauge(img,gauge_number,file_type):
     #gray = cv2.medianBlur(gray, 5)
 
 
-    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1, 20, np.array([]), 100, 50, int(height*0.35), int(height*0.48))
+    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1, 20, np.array([]), 100, 50, int(width*0.6), int(height*0.48))
     
     a, b, c = circles.shape
     x,y,r = avg_circles(circles, b)
@@ -171,10 +171,10 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
 
 def cv(gauge_number,img_path,calibration_path):
     file_type = 'png'
+    img = cv2.imread(img_path,1)
     print('gauge number: 00%s' %gauge_number)
     min_angle, max_angle, min_value, max_value, units = gc.gauge_calibration(calibration_path,gauge_number) 
-    x, y, r = calibrate_gauge(gauge_number, file_type) 
-    img = cv2.imread(img_path,1)
+    x, y, r = calibrate_gauge(img,gauge_number, file_type) 
     #assert not isinstance(image,type(None)), 'image not found'
     val = get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, gauge_number, file_type)
     return val,units
