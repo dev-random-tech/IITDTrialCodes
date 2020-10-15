@@ -35,11 +35,11 @@ def calibrate_gauge(img,gauge_number,file_type):
     a, b, c = circles.shape
     x,y,r = avg_circles(circles, b)
 
-    cv2.circle(img, (x, y), r, (0, 0, 255), 3, cv2.LINE_AA) 
-    cv2.circle(img, (x, y), 2, (0, 255, 0), 3, cv2.LINE_AA)
+    #cv2.circle(img, (x, y), r, (0, 0, 255), 3, cv2.LINE_AA) 
+    #cv2.circle(img, (x, y), 2, (0, 255, 0), 3, cv2.LINE_AA)
 
     #cv2.imwrite('gauge-%s-circles.%s' % (gauge_number, file_type), img)
-
+    '''
     separation = 10.0 
     interval = int(360 / separation)
     p1 = np.zeros((interval,2))  
@@ -65,8 +65,8 @@ def calibrate_gauge(img,gauge_number,file_type):
     for i in range(0,interval):
         cv2.line(img, (int(p1[i][0]), int(p1[i][1])), (int(p2[i][0]), int(p2[i][1])),(0, 255, 0), 2)
         cv2.putText(img, '%s' %(int(i*separation)), (int(p_text[i][0]), int(p_text[i][1])), cv2.FONT_HERSHEY_SIMPLEX, 0.3,(0,0,0),1,cv2.LINE_AA)
-
-    cv2.imwrite('./images/gauge-%s-calibration.%s' % (gauge_number, file_type), img)
+    '''
+    #cv2.imwrite('./images/gauge-%s-calibration.%s' % (gauge_number, file_type), img)
 
     return x, y, r	
 
@@ -85,7 +85,7 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
     #dst2 = cv2.Canny(dst2, 50, 150)
     #dst2 = cv2.GaussianBlur(dst2, (5, 5), 0)
 
-    cv2.imwrite('./images/gauge-%s-tempdst2.%s' % (gauge_number, file_type), dst2)
+    #cv2.imwrite('./images/gauge-%s-tempdst2.%s' % (gauge_number, file_type), dst2)
 
     minLineLength = 10
     maxLineGap = 0
@@ -102,7 +102,7 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
         for x1, y1, x2, y2 in lines[i]:
             diff1 = dist_2_pts(x, y, x1, y1)  
             diff2 = dist_2_pts(x, y, x2, y2)  
-            cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            #cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
             
             if (diff1 > diff2):
                 temp = diff1
@@ -112,8 +112,7 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
             if (((diff1<diff1UpperBound*r) and (diff1>diff1LowerBound*r) and (diff2<diff2UpperBound*r)) and (diff2>diff2LowerBound*r)):
                 line_length = dist_2_pts(x1, y1, x2, y2)
                 final_line_list.append([x1, y1, x2, y2])
-    cv2.imwrite('./images/gauge-%s-lines-2.%s' % (gauge_number, file_type), img)
-    print('check lines')
+    #cv2.imwrite('./images/gauge-%s-lines-2.%s' % (gauge_number, file_type), img)
     
     # for i in range(0,len(final_line_list)):
     #     x1 = final_line_list[i][0]
@@ -121,12 +120,12 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
     #     x2 = final_line_list[i][2]
     #     y2 = final_line_list[i][3]
     #     cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-    #x1 = final_line_list[0][0]
-    #y1 = final_line_list[0][1]
-    #x2 = final_line_list[0][2]
-    #y2 = final_line_list[0][3]
+    x1 = final_line_list[0][0]
+    y1 = final_line_list[0][1]
+    x2 = final_line_list[0][2]
+    y2 = final_line_list[0][3]
 
-    x1,y1,x2,y2 = (46,148,103,141)
+    #x1,y1,x2,y2 = (46,148,103,141)
 
 
     dist_pt_0 = dist_2_pts(x, y, x1, y1)
@@ -140,11 +139,6 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
     
     res = np.arctan(np.divide(float(y_angle), float(x_angle)))
     #np.rad2deg(res) #coverts to degrees
-
-    # print x_angle
-    # print y_angle
-    # print res
-    # print np.rad2deg(res)
 
     res = np.rad2deg(res)
     if x_angle > 0 and y_angle > 0:  #in quadrant I
@@ -196,7 +190,3 @@ def main():
 if __name__=='__main__':
     main()
 '''
-    
-   	
-
-
