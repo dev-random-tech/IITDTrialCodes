@@ -4,6 +4,8 @@ import time
 import imageMod as imgMod
 import gauge_calibration as gc
 
+#Out of all circles that are found out, taking the average best approximated the
+#actual dial 
 def avg_circles(circles, b):
     avg_x=0
     avg_y=0
@@ -17,28 +19,32 @@ def avg_circles(circles, b):
     avg_r = int(avg_r/(b))
     return avg_x, avg_y, avg_r
 
+#finding the distance between two sets of points
 def dist_2_pts(x1, y1, x2, y2):
     #print np.sqrt((x2-x1)^2+(y2-y1)^2)
     return np.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
+#To detect the circle and calibrate t
 def calibrate_gauge(img,gauge_number,file_type):
 
     #img = cv2.imread('./images/gauge-%s.%s' %(gauge_number, file_type),1)
+    img2 = img.copy()
     height,width  = img.shape[:2]
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  
     #gray = cv2.GaussianBlur(gray, (5, 5), 0)
     #gray = cv2.medianBlur(gray, 5)
 
 
-    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1, 20, np.array([]), 100, 50, int(height*0.35), int(height*0.48))
+    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1, 20, np.array([]), 100, 50, int(width*0.30), int(width*0.45))
     
     a, b, c = circles.shape
     x,y,r = avg_circles(circles, b)
 
-    #cv2.circle(img, (x, y), r, (0, 0, 255), 3, cv2.LINE_AA) 
-    #cv2.circle(img, (x, y), 2, (0, 255, 0), 3, cv2.LINE_AA)
+    cv2.circle(img2, (x, y), r, (0, 0, 255), 3, cv2.LINE_AA) 
+    cv2.circle(img2, (x, y), 2, (0, 255, 0), 3, cv2.LINE_AA)
 
-    #cv2.imwrite('gauge-%s-circles.%s' % (gauge_number, file_type), img)
+    cv2.imwrite('./gauge-%s-circles.%s' % (gauge_number, file_type), img2)
+    
     '''
     separation = 10.0 
     interval = int(360 / separation)
@@ -65,16 +71,18 @@ def calibrate_gauge(img,gauge_number,file_type):
     for i in range(0,interval):
         cv2.line(img, (int(p1[i][0]), int(p1[i][1])), (int(p2[i][0]), int(p2[i][1])),(0, 255, 0), 2)
         cv2.putText(img, '%s' %(int(i*separation)), (int(p_text[i][0]), int(p_text[i][1])), cv2.FONT_HERSHEY_SIMPLEX, 0.3,(0,0,0),1,cv2.LINE_AA)
+    
+    cv2.imwrite('./gauge-%s-calibration.%s' % (gauge_number, file_type), img)
     '''
-    #cv2.imwrite('./images/gauge-%s-calibration.%s' % (gauge_number, file_type), img)
-
     return x, y, r	
 
+#to find the relevant lines, it's angle and give it's output
+#on the basis of calibration parameters
 def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, gauge_number, file_type):
 
     #img = cv2.imread('gauge-%s.%s' % (gauge_number, file_type))
-
-    gray2 = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img2 = img.copy()
+    gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
     thresh = 175
     maxValue = 255
@@ -87,7 +95,7 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
 
     #cv2.imwrite('./images/gauge-%s-tempdst2.%s' % (gauge_number, file_type), dst2)
 
-    minLineLength = 10
+    minLineLength = 70
     maxLineGap = 0
     lines = cv2.HoughLinesP(image=dst2, rho=3, theta=np.pi / 180, threshold=100,minLineLength=minLineLength, maxLineGap=0) 
 
@@ -102,7 +110,7 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
         for x1, y1, x2, y2 in lines[i]:
             diff1 = dist_2_pts(x, y, x1, y1)  
             diff2 = dist_2_pts(x, y, x2, y2)  
-            #cv2.line(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            cv2.line(img2, (x1, y1), (x2, y2), (0, 255, 0), 2)
             
             if (diff1 > diff2):
                 temp = diff1
@@ -111,8 +119,9 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
             
             if (((diff1<diff1UpperBound*r) and (diff1>diff1LowerBound*r) and (diff2<diff2UpperBound*r)) and (diff2>diff2LowerBound*r)):
                 line_length = dist_2_pts(x1, y1, x2, y2)
+                print(line_length)
                 final_line_list.append([x1, y1, x2, y2])
-    #cv2.imwrite('./images/gauge-%s-lines-2.%s' % (gauge_number, file_type), img)
+    cv2.imwrite('./gauge-%s-lines-2.%s' % (gauge_number, file_type), img2)
     
     # for i in range(0,len(final_line_list)):
     #     x1 = final_line_list[i][0]
@@ -167,10 +176,11 @@ def get_current_value(img, min_angle, max_angle, min_value, max_value, x, y, r, 
 def cv(gauge_number,img_path,calibration_path,file_type):
     
     img = cv2.imread(img_path,1)
+    #imgCopy = img.copy()
     print(img.shape)
     print('gauge number: 00%s' %gauge_number)
-    #min_angle, max_angle, min_value, max_value, units = gc.gauge_calibration(calibration_path,gauge_number) 
-    min_angle, max_angle, min_value, max_value, units = (40,320,0,200,'psi')
+    min_angle, max_angle, min_value, max_value, units = gc.gauge_calibration(calibration_path,gauge_number) 
+    #min_angle, max_angle, min_value, max_value, units = (40,320,0,200,'psi')
     x, y, r = calibrate_gauge(img,gauge_number, file_type) 
     print(x,y,r)
 

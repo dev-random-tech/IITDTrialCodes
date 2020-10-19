@@ -1,7 +1,7 @@
 gauge_index,min_angle,max_angle,min_val,max_val,unit
 1,40,320,0,200,psi
 2,40,320,0,200,psi
-3,40,320,0,200,psi
+3,30,320,0,200,psi
 4,40,320,0,200,psi
 5,40,320,0,200,psi
 6,40,320,0,200,psi
